@@ -1,0 +1,5 @@
+# DON'T TOUCH Config-Version OR THINGS WILL BREAK
+Config-Version: 1.1.0
+# Worlds that should not have any broadcasts
+Blacklisted-Worlds:
+  - "minecraft:test_world"

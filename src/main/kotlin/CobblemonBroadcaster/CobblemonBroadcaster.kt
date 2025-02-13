@@ -19,8 +19,7 @@ import java.io.IOException
 import java.util.*
 
 class CobblemonBroadcaster : ModInitializer {
-	private var isImpactorAvailable = false
-	private var server: MinecraftServer? = null // Store the server instance
+	private var server: MinecraftServer? = null
 
 	override fun onInitialize() {
 		// novoro signature ;)
@@ -30,9 +29,6 @@ class CobblemonBroadcaster : ModInitializer {
 		this.configManager()
 		// Load language entries into LangManager
 		LangManager.loadConfig(mainConfig)
-
-		// Check for LuckPerms
-		checkLuckPermsDependency()
 
 		// Register all the commands available in the mod.
 		registerCommands()
@@ -84,6 +80,14 @@ class CobblemonBroadcaster : ModInitializer {
 			LOGGER.error("Failed to load main configuration. Default values will be used.")
 		} else {
 			LOGGER.info("Configuration loaded successfully.")
+		}
+
+		val blacklistConfig = getConfig("world-blacklist.yml")
+		if (blacklistConfig == null) {
+			LOGGER.error("Failed to load world-blacklist.yml!")
+		} else {
+			BlacklistedWorlds.load(blacklistConfig)
+			LOGGER.info("Blacklisted worlds loaded: {}", BlacklistedWorlds.getblacklistedWorlds)
 		}
 	}
 
@@ -155,15 +159,6 @@ class CobblemonBroadcaster : ModInitializer {
 		LOGGER.info("Event listeners registered!")
 	}
 
-	private fun checkLuckPermsDependency() {
-		isImpactorAvailable = FabricLoader.getInstance().isModLoaded("luckperms")
-		if (isImpactorAvailable) {
-			LOGGER.info("LuckPerms API is available, enabling LuckPerms-specific features.")
-		} else {
-			LOGGER.warn("LuckPerms API is not available, disabling LuckPerms-specific features.")
-		}
-	}
-
 	companion object {
 		val LOGGER: Logger = LoggerFactory.getLogger("CobblemonBroadcaster")
 		var perms: PermissionHelper? = null
@@ -190,6 +185,13 @@ class CobblemonBroadcaster : ModInitializer {
 				)
 				LangManager.loadConfig(mainConfig)
 				LOGGER.info("Cobblemon Broadcaster configuration reloaded successfully.")
+
+				val worldBlacklistConfig = YamlConfiguration.loadConfiguration(
+					CobblemonBroadcaster().getOrCreateConfigurationFile("world-blacklist.yml")
+				)
+				BlacklistedWorlds.load(worldBlacklistConfig)
+				LOGGER.info("Blacklisted worlds reloaded: {}", BlacklistedWorlds.getblacklistedWorlds)
+
 			} catch (e: Exception) {
 				LOGGER.error("Failed to reload configuration: ${e.message}", e)
 				throw e

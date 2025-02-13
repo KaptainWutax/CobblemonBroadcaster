@@ -1,12 +1,14 @@
 package CobblemonBroadcaster.events
 
 import CobblemonBroadcaster.config.Configuration
+import CobblemonBroadcaster.util.BlacklistedWorlds
 import CobblemonBroadcaster.util.LangManager
 import CobblemonBroadcaster.util.SimpleLogger
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.world.ServerWorld
 
 class FaintEvent(private val config: Configuration, private val server: MinecraftServer) {
 

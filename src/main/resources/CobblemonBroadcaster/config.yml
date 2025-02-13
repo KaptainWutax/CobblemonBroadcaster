@@ -1,5 +1,5 @@
 # DON'T TOUCH Config-Version OR THINGS WILL BREAK
-Config-Version: 1.0.0
+Config-Version: 1.1.0
 # Name of Spec
 shiny:
   # Enable/Disable the announcements
@@ -25,5 +25,4 @@ ultrabeast:
   SpawnMessage: "<aqua>An Ultra Beast <dark_aqua>{pokemon} <aqua>has spawned near <dark_aqua>{player}!"
   FaintMessage: "<red>A Ultra Beast <dark_red>{pokemon}<red> has fainted."
   CaptureMessage: "<aqua>A Ultra Beast <dark_aqua>{pokemon} <aqua>has been captured by <dark_aqua>{player}!"
-
 

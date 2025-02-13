@@ -1,21 +1,29 @@
 package CobblemonBroadcaster.events
 
 import CobblemonBroadcaster.config.Configuration
+import CobblemonBroadcaster.util.BlacklistedWorlds
 import CobblemonBroadcaster.util.LangManager
-import CobblemonBroadcaster.util.SimpleLogger
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
 
 class CaptureEvent(private val config: Configuration) {
 
     init {
         CobblemonEvents.POKEMON_CAPTURED.subscribe(priority = Priority.LOWEST) { event ->
+
             val pokemon = event.pokemon
             val player = event.player
 
+            // Blacklist Stuff
+            val world = event.player.world as? ServerWorld
+            val worldName = world?.registryKey?.value.toString()
+            if (BlacklistedWorlds.isBlacklisted(worldName)) {
+                return@subscribe
+            }
 
             // Debugging: Log all aspects of the Pokémon
             val aspects = AspectProvider.providers.flatMap { it.provide(pokemon) }

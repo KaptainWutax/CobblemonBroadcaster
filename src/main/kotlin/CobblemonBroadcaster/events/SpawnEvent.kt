@@ -1,12 +1,14 @@
 package CobblemonBroadcaster.events
 
 import CobblemonBroadcaster.config.Configuration
+import CobblemonBroadcaster.util.BlacklistedWorlds
 import CobblemonBroadcaster.util.LangManager
 import CobblemonBroadcaster.util.SimpleLogger
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
 
 class SpawnEvent(private val config: Configuration) {
 
@@ -14,6 +16,13 @@ class SpawnEvent(private val config: Configuration) {
         CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe(priority = Priority.LOWEST) { event ->
             val pokemonEntity = event.entity
             val aspects = AspectProvider.providers.flatMap { it.provide(pokemonEntity.pokemon) }
+
+            // Blacklist Stuff
+            val world = event.entity.world as? ServerWorld
+            val worldName = world?.registryKey?.value.toString()
+            if (BlacklistedWorlds.isBlacklisted(worldName)) {
+                return@subscribe
+            }
 
             // Debugging: Log all aspects of the Pokémon
             //SimpleLogger.debug("Pokemon ${pokemonEntity.pokemon.species.name} has aspects: $aspects")

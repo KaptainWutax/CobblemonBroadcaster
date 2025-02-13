@@ -23,9 +23,11 @@ repositories {
 		url 'https://maven.nucleoid.xyz/'
 		name 'Nucleoid'
 	}
+
 	maven {
 		url "https://maven.impactdev.net/repository/development/"
 	}
+
 }
 
 dependencies {
@@ -40,8 +42,8 @@ dependencies {
 
 	implementation "cloud.commandframework:cloud-core:1.8.4"
 
-	// Cobblemon 1.6
-	modImplementation("com.cobblemon:fabric:1.6.0+1.21.1-SNAPSHOT")
+	// Cobblemon 1.6.1
+	modImplementation("com.cobblemon:fabric:1.6.1+1.21.1")
 
 	// MiniMessage stuffs
 	modImplementation include("net.kyori:adventure-text-minimessage:4.17.0")
@@ -73,35 +75,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
 
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
 }

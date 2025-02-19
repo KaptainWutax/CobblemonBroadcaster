@@ -7,10 +7,6 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
-base {
-	archivesName = project.archives_base_name
-}
-
 repositories {
 	mavenCentral()
 	maven {
@@ -19,6 +15,7 @@ repositories {
 	maven {
 		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
 	}
+
 	maven {
 		url 'https://maven.nucleoid.xyz/'
 		name 'Nucleoid'
@@ -50,7 +47,7 @@ dependencies {
 	modImplementation include("net.kyori:adventure-platform-fabric:5.14.1")
 
 	// SnakeYAML dependency
-	implementation "org.yaml:snakeyaml:2.1"
+	implementation include(group: 'org.yaml', name: 'snakeyaml', version: '2.1')
 
 	modImplementation "me.lucko:fabric-permissions-api:0.3.1"
 	compileOnly "net.luckperms:api:5.4"
@@ -75,7 +72,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 java {
-
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
 }

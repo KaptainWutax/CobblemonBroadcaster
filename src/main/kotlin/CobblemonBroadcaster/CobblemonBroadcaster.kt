@@ -8,9 +8,11 @@ import CobblemonBroadcaster.util.*
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.luckperms.api.LuckPermsProvider
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.network.ServerPlayNetworkHandler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -55,7 +57,12 @@ class CobblemonBroadcaster : ModInitializer {
 
 			// Register events that require the server instance
 			registerEventListeners()
-			LOGGER.info("Server instance captured and event listeners registered!")
+		}
+
+		// Listener for Player Joins (Relevant for FaintEvent)
+		ServerPlayConnectionEvents.JOIN.register { handler: ServerPlayNetworkHandler, sender, server ->
+			val player = handler.player
+			playerLoginTimes[player.uuid] = System.currentTimeMillis()
 		}
 	}
 
@@ -161,6 +168,8 @@ class CobblemonBroadcaster : ModInitializer {
 
 	companion object {
 		val LOGGER: Logger = LoggerFactory.getLogger("CobblemonBroadcaster")
+		// For each player's UUID, store the last time they joined (in ms).
+		val playerLoginTimes = mutableMapOf<UUID, Long>()
 		var perms: PermissionHelper? = null
 		private var mainConfig: Configuration? = null
 

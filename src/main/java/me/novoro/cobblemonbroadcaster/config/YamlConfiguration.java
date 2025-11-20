@@ -1,4 +1,4 @@
-package CobblemonBroadcaster.config;
+package me.novoro.cobblemonbroadcaster.config;
 
 import com.google.common.base.Charsets;
 import org.yaml.snakeyaml.DumperOptions;

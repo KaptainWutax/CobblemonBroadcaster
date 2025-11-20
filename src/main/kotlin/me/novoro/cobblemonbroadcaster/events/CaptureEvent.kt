@@ -1,12 +1,11 @@
-package CobblemonBroadcaster.events
+package me.novoro.cobblemonbroadcaster.events
 
-import CobblemonBroadcaster.config.Configuration
-import CobblemonBroadcaster.util.BlacklistedWorlds
-import CobblemonBroadcaster.util.LangManager
+import me.novoro.cobblemonbroadcaster.config.Configuration
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.pokemon.Pokemon
+import me.novoro.cobblemonbroadcaster.util.LangManager
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 
@@ -21,7 +20,7 @@ class CaptureEvent(private val config: Configuration) {
             // Blacklist Stuff
             val world = event.player.world as? ServerWorld
             val worldName = world?.registryKey?.value.toString()
-            if (BlacklistedWorlds.isBlacklisted(worldName)) {
+            if (me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.isBlacklisted(worldName)) {
                 return@subscribe
             }
 

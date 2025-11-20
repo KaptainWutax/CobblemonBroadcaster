@@ -1,6 +1,6 @@
-package CobblemonBroadcaster.config;
+package me.novoro.cobblemonbroadcaster.config;
 
-import CobblemonBroadcaster.CobblemonBroadcaster;
+import me.novoro.cobblemonbroadcaster.CobblemonBroadcaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

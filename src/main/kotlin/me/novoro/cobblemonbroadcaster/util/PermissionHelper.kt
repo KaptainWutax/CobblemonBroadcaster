@@ -1,4 +1,4 @@
-package CobblemonBroadcaster.util
+package me.novoro.cobblemonbroadcaster.util
 
 /**
  * Provides utility functions for checking permissions using LuckPerms.

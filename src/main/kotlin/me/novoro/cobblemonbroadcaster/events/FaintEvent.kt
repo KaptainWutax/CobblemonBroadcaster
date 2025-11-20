@@ -1,15 +1,11 @@
-package CobblemonBroadcaster.events
+package me.novoro.cobblemonbroadcaster.events
 
-import CobblemonBroadcaster.CobblemonBroadcaster
-import CobblemonBroadcaster.config.Configuration
-import CobblemonBroadcaster.util.BlacklistedWorlds
-import CobblemonBroadcaster.util.LangManager
-import CobblemonBroadcaster.util.SimpleLogger
+import me.novoro.cobblemonbroadcaster.config.Configuration
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
+import me.novoro.cobblemonbroadcaster.util.LangManager
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.world.ServerWorld
 
 class FaintEvent(private val config: Configuration, private val server: MinecraftServer) {
 

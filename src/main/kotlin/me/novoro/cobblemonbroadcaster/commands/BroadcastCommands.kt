@@ -1,6 +1,6 @@
-package CobblemonBroadcaster.commands
+package me.novoro.cobblemonbroadcaster.commands
 
-import CobblemonBroadcaster.CobblemonBroadcaster
+import me.novoro.cobblemonbroadcaster.CobblemonBroadcaster
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext

@@ -15,7 +15,7 @@
 	"entrypoints": {
 		"main": [
 			{
-				"value": "CobblemonBroadcaster.CobblemonBroadcaster",
+				"value": "me.novoro.cobblemonbroadcaster.CobblemonBroadcaster",
 				"adapter": "kotlin"
 			}
 		]

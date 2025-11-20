@@ -1,4 +1,4 @@
-package CobblemonBroadcaster.util
+package me.novoro.cobblemonbroadcaster.util
 
 object SimpleLogger {
     fun info(message: String) {

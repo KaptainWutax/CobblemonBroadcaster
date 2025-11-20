@@ -1,12 +1,10 @@
-package CobblemonBroadcaster.events
+package me.novoro.cobblemonbroadcaster.events
 
-import CobblemonBroadcaster.config.Configuration
-import CobblemonBroadcaster.util.BlacklistedWorlds
-import CobblemonBroadcaster.util.LangManager
-import CobblemonBroadcaster.util.SimpleLogger
+import me.novoro.cobblemonbroadcaster.config.Configuration
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
+import me.novoro.cobblemonbroadcaster.util.LangManager
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 
@@ -20,7 +18,7 @@ class SpawnEvent(private val config: Configuration) {
             // Blacklist Stuff
             val world = event.entity.world as? ServerWorld
             val worldName = world?.registryKey?.value.toString()
-            if (BlacklistedWorlds.isBlacklisted(worldName)) {
+            if (me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.isBlacklisted(worldName)) {
                 return@subscribe
             }
 
@@ -31,16 +29,16 @@ class SpawnEvent(private val config: Configuration) {
             config.keys.forEach { customCategory ->
                 if (customCategory !in setOf("shiny", "legendary", "mythical", "ultrabeast")) {
                     if (customCategory in aspects) {
-                        if (handleCategory(pokemonEntity, event.ctx.spawner.name, customCategory) { true }) return@subscribe
+                        if (handleCategory(pokemonEntity, event.spawnablePosition.spawner.name, customCategory) { true }) return@subscribe
                     }
                 }
             }
 
             // Default categories with priority
-            if (handleCategory(pokemonEntity, event.ctx.spawner.name, "mythical") { pokemonEntity.pokemon.isMythical() }) return@subscribe
-            if (handleCategory(pokemonEntity, event.ctx.spawner.name, "legendary") { pokemonEntity.pokemon.isLegendary() }) return@subscribe
-            if (handleCategory(pokemonEntity, event.ctx.spawner.name, "ultrabeast") { pokemonEntity.pokemon.isUltraBeast() }) return@subscribe
-            if (handleCategory(pokemonEntity, event.ctx.spawner.name, "shiny") { pokemonEntity.pokemon.shiny }) return@subscribe
+            if (handleCategory(pokemonEntity, event.spawnablePosition.spawner.name, "mythical") { pokemonEntity.pokemon.isMythical() }) return@subscribe
+            if (handleCategory(pokemonEntity, event.spawnablePosition.spawner.name, "legendary") { pokemonEntity.pokemon.isLegendary() }) return@subscribe
+            if (handleCategory(pokemonEntity, event.spawnablePosition.spawner.name, "ultrabeast") { pokemonEntity.pokemon.isUltraBeast() }) return@subscribe
+            if (handleCategory(pokemonEntity, event.spawnablePosition.spawner.name, "shiny") { pokemonEntity.pokemon.shiny }) return@subscribe
         }
     }
 

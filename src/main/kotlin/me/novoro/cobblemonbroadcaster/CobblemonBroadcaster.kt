@@ -1,10 +1,12 @@
-package CobblemonBroadcaster
+package me.novoro.cobblemonbroadcaster
 
-import CobblemonBroadcaster.commands.BroadcastCommands
-import CobblemonBroadcaster.config.Configuration
-import CobblemonBroadcaster.config.YamlConfiguration
-import CobblemonBroadcaster.events.*
-import CobblemonBroadcaster.util.*
+import me.novoro.cobblemonbroadcaster.commands.BroadcastCommands
+import me.novoro.cobblemonbroadcaster.config.Configuration
+import me.novoro.cobblemonbroadcaster.config.YamlConfiguration
+import me.novoro.cobblemonbroadcaster.events.CaptureEvent
+import me.novoro.cobblemonbroadcaster.events.SpawnEvent
+import me.novoro.cobblemonbroadcaster.util.LangManager
+import me.novoro.cobblemonbroadcaster.util.PermissionHelper
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -93,8 +95,8 @@ class CobblemonBroadcaster : ModInitializer {
 		if (blacklistConfig == null) {
 			LOGGER.error("Failed to load world-blacklist.yml!")
 		} else {
-			BlacklistedWorlds.load(blacklistConfig)
-			LOGGER.info("Blacklisted worlds loaded: {}", BlacklistedWorlds.getblacklistedWorlds)
+			me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.load(blacklistConfig)
+			LOGGER.info("Blacklisted worlds loaded: {}", me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.getblacklistedWorlds)
 		}
 	}
 
@@ -120,7 +122,7 @@ class CobblemonBroadcaster : ModInitializer {
 	}
 
 	fun getConfigFolder(): File {
-		val configFolder = FabricLoader.getInstance().configDir.resolve("CobblemonBroadcaster").toFile()
+		val configFolder = FabricLoader.getInstance().configDir.resolve("cobblemonbroadcaster").toFile()
 		if (!configFolder.exists()) configFolder.mkdirs()
 		return configFolder
 	}
@@ -158,7 +160,7 @@ class CobblemonBroadcaster : ModInitializer {
 	private fun registerEventListeners() {
 		if (mainConfig != null && server != null) {
 			SpawnEvent(mainConfig!!)
-			FaintEvent(mainConfig!!, server!!)
+			me.novoro.cobblemonbroadcaster.events.FaintEvent(mainConfig!!, server!!)
 			CaptureEvent(mainConfig!!)
 		} else {
 			LOGGER.error("Failed to register events: mainConfig or server is null.")
@@ -167,7 +169,7 @@ class CobblemonBroadcaster : ModInitializer {
 	}
 
 	companion object {
-		val LOGGER: Logger = LoggerFactory.getLogger("CobblemonBroadcaster")
+		val LOGGER: Logger = LoggerFactory.getLogger("cobblemonbroadcaster")
 		// For each player's UUID, store the last time they joined (in ms).
 		val playerLoginTimes = mutableMapOf<UUID, Long>()
 		var perms: PermissionHelper? = null
@@ -179,7 +181,7 @@ class CobblemonBroadcaster : ModInitializer {
 
 		val configFolder: File
 			get() {
-				val configFolder = FabricLoader.getInstance().configDir.resolve("CobblemonBroadcaster").toFile()
+				val configFolder = FabricLoader.getInstance().configDir.resolve("cobblemonbroadcaster").toFile()
 				if (!configFolder.exists()) configFolder.mkdirs()
 				return configFolder
 			}
@@ -198,8 +200,8 @@ class CobblemonBroadcaster : ModInitializer {
 				val worldBlacklistConfig = YamlConfiguration.loadConfiguration(
 					CobblemonBroadcaster().getOrCreateConfigurationFile("world-blacklist.yml")
 				)
-				BlacklistedWorlds.load(worldBlacklistConfig)
-				LOGGER.info("Blacklisted worlds reloaded: {}", BlacklistedWorlds.getblacklistedWorlds)
+				me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.load(worldBlacklistConfig)
+				LOGGER.info("Blacklisted worlds reloaded: {}", me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.getblacklistedWorlds)
 
 			} catch (e: Exception) {
 				LOGGER.error("Failed to reload configuration: ${e.message}", e)

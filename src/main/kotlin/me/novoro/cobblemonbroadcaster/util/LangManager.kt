@@ -1,10 +1,8 @@
-package CobblemonBroadcaster.util
+package me.novoro.cobblemonbroadcaster.util
 
-import CobblemonBroadcaster.config.Configuration
+import me.novoro.cobblemonbroadcaster.config.Configuration
 import net.kyori.adventure.audience.Audience
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
-import org.apache.logging.log4j.core.jmx.Server
 
 object LangManager {
     private val lang: MutableMap<String, String> = HashMap()

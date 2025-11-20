@@ -1,5 +1,5 @@
 # DON'T TOUCH Config-Version OR THINGS WILL BREAK
-Config-Version: 1.1.0
+Config-Version: 1.2.0
 # Name of Spec
 shiny:
   # Enable/Disable the announcements

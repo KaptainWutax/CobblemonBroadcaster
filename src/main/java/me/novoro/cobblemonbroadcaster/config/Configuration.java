@@ -1,4 +1,4 @@
-package CobblemonBroadcaster.config;
+package me.novoro.cobblemonbroadcaster.config;
 
 import java.io.File;
 import java.util.*;

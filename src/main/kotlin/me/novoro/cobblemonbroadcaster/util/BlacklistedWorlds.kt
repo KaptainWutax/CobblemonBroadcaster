@@ -1,6 +1,6 @@
-package CobblemonBroadcaster.util
+package me.novoro.cobblemonbroadcaster.util
 
-import CobblemonBroadcaster.config.Configuration
+import me.novoro.cobblemonbroadcaster.config.Configuration
 import java.util.*
 
 /**
@@ -13,7 +13,7 @@ object BlacklistedWorlds {
      * Loads the blacklisted worlds from the given Configuration object.
      */
     fun load(config: Configuration?) {
-        BLACKLISTED_WORLDS.clear()
+        me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.BLACKLISTED_WORLDS.clear()
 
         if (config == null) {
             return
@@ -22,7 +22,7 @@ object BlacklistedWorlds {
         // Attempt to get the list from the config
         val list = config.getStringList("Blacklisted-Worlds")
         if (list != null) {
-            BLACKLISTED_WORLDS.addAll(list)
+            me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.BLACKLISTED_WORLDS.addAll(list)
         }
     }
 
@@ -30,12 +30,12 @@ object BlacklistedWorlds {
      * Checks if a given world name is on the blacklist.
      */
     fun isBlacklisted(worldName: String): Boolean {
-        return BLACKLISTED_WORLDS.contains(worldName)
+        return me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.BLACKLISTED_WORLDS.contains(worldName)
     }
 
     val getblacklistedWorlds: Set<String>
         /**
          * If you want direct access to the unmodifiable set, use this
          */
-        get() = Collections.unmodifiableSet(BLACKLISTED_WORLDS)
+        get() = Collections.unmodifiableSet(me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.BLACKLISTED_WORLDS)
 }

@@ -26,7 +26,7 @@ public class ConfigVersionUpdater {
     }
 
     private void updateConfigFile(Configuration config, String fileName) {
-        String configVersion = config.getString("Config-Version", "1.0.0");
+        String configVersion = config.getString("Config-Version", "1.2");
 
         // Only update if the current version is older than the new version
         if (isNewerVersion(configVersion, currentVersion)) {

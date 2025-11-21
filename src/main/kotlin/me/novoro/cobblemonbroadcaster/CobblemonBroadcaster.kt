@@ -106,12 +106,11 @@ class CobblemonBroadcaster : ModInitializer {
 		val configFile = File(configFolder, fileName)
 
 		if (!configFile.exists()) {
-			configFolder.mkdirs() // Ensure the folder exists
-			val resourcePath = "/CobblemonBroadcaster/$fileName" // Path inside resources folder
+			configFolder.mkdirs()
+			val resourcePath = "/CobblemonBroadcaster/$fileName"
 			val resourceStream = javaClass.getResourceAsStream(resourcePath)
 				?: throw IOException("Default configuration file not found in resources: $resourcePath")
 
-			// Copy the resource file to the configuration folder
 			resourceStream.use { input ->
 				FileOutputStream(configFile).use { output ->
 					input.copyTo(output)
@@ -119,12 +118,6 @@ class CobblemonBroadcaster : ModInitializer {
 			}
 		}
 		return configFile
-	}
-
-	fun getConfigFolder(): File {
-		val configFolder = FabricLoader.getInstance().configDir.resolve("cobblemonbroadcaster").toFile()
-		if (!configFolder.exists()) configFolder.mkdirs()
-		return configFolder
 	}
 
 	fun getConfig(fileName: String): Configuration? {
@@ -135,18 +128,6 @@ class CobblemonBroadcaster : ModInitializer {
 			e.printStackTrace()
 		}
 		return config
-	}
-
-	fun saveConfig(file: File?, config: Configuration?) {
-		try {
-			if (config != null) {
-				if (file != null) {
-					YamlConfiguration.save(config, file)
-				}
-			}
-		} catch (e: IOException) {
-			e.printStackTrace()
-		}
 	}
 
 	/**
@@ -169,7 +150,7 @@ class CobblemonBroadcaster : ModInitializer {
 	}
 
 	companion object {
-		val LOGGER: Logger = LoggerFactory.getLogger("cobblemonbroadcaster")
+		val LOGGER: Logger = LoggerFactory.getLogger("CobblemonBroadcaster")
 		// For each player's UUID, store the last time they joined (in ms).
 		val playerLoginTimes = mutableMapOf<UUID, Long>()
 		var perms: PermissionHelper? = null
@@ -181,7 +162,7 @@ class CobblemonBroadcaster : ModInitializer {
 
 		val configFolder: File
 			get() {
-				val configFolder = FabricLoader.getInstance().configDir.resolve("cobblemonbroadcaster").toFile()
+				val configFolder = FabricLoader.getInstance().configDir.resolve("CobblemonBroadcaster").toFile()
 				if (!configFolder.exists()) configFolder.mkdirs()
 				return configFolder
 			}

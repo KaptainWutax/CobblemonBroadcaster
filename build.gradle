@@ -39,7 +39,7 @@ dependencies {
 
 	implementation "cloud.commandframework:cloud-core:1.8.4"
 
-	// Cobblemon 1.6.1
+	// Cobblemon 1.7
 	modImplementation("com.cobblemon:fabric:1.7.0+1.21.1-SNAPSHOT")
 
 	// MiniMessage stuffs

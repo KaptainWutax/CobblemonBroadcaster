@@ -1,6 +1,7 @@
 package me.novoro.cobblemonbroadcaster.util
 
 import com.cobblemon.mod.common.api.pokemon.labels.CobblemonPokemonLabels
+import java.util.*
 
 object LabelHelper {
 
@@ -48,6 +49,10 @@ object LabelHelper {
     )
 
     fun filterValidLabels(labels: Collection<String>): Set<String> {
-        return labels.filter { it in COBBLEMON_LABELS }.toSet()
+        return labels.filter { labelString ->
+            COBBLEMON_LABELS.any { cobblemonLabel ->
+                cobblemonLabel.equals(labelString, ignoreCase = true)
+            }
+        }.map { it.lowercase(Locale.getDefault()) }.toSet()
     }
 }

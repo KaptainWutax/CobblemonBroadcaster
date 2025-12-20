@@ -6,7 +6,6 @@ import me.novoro.cobblemonbroadcaster.config.YamlConfiguration
 import me.novoro.cobblemonbroadcaster.events.CaptureEvent
 import me.novoro.cobblemonbroadcaster.events.SpawnEvent
 import me.novoro.cobblemonbroadcaster.util.LangManager
-import me.novoro.cobblemonbroadcaster.util.PermissionHelper
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -77,7 +76,6 @@ class CobblemonBroadcaster : ModInitializer {
 		try {
 			LuckPermsProvider.get()
 			// Attempt to get an instance of LuckPermsProvider, signaling that permissions have been set up.
-			perms = PermissionHelper()
 			LOGGER.info("Permissions system initialized!")
 		} catch (e: Exception) {
 			LOGGER.error("Failed to initialize permissions system!", e)
@@ -159,7 +157,6 @@ class CobblemonBroadcaster : ModInitializer {
 		val LOGGER: Logger = LoggerFactory.getLogger("CobblemonBroadcaster")
 		// For each player's UUID, store the last time they joined (in ms).
 		val playerLoginTimes = mutableMapOf<UUID, Long>()
-		var perms: PermissionHelper? = null
 		private var mainConfig: Configuration? = null
 
 		fun getMainConfig(): Configuration? {

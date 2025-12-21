@@ -5,19 +5,20 @@ import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
-import com.cobblemon.mod.common.pokemon.Gender
 import me.novoro.cobblemonbroadcaster.util.LangManager
 import me.novoro.cobblemonbroadcaster.util.LabelHelper
+import me.novoro.cobblemonbroadcaster.util.PlaceholderUtils
+import me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds
 import me.novoro.cobblemonbroadcaster.util.SimpleLogger
+import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos;
 
 class SpawnEvent(private val config: Configuration) {
 
-    //TODO Add Gender Placeholders ♂, ♀, ⚲
     //TODO Add Multiple Spec-Support (Shiny Legendary, Legendary Galarian, etc.)
-    //TODO Make Labels and Aspects work together
     //TODO Option to send it to player it spawns on vs Global
     //TODO Load Keys in when reload
 
@@ -44,7 +45,7 @@ class SpawnEvent(private val config: Configuration) {
             // Blacklist Stuff
             val world = event.entity.world as? ServerWorld
             val worldName = world?.registryKey?.value.toString()
-            if (me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.isBlacklisted(worldName)) {
+            if (BlacklistedWorlds.isBlacklisted(worldName)) {
                 return@subscribe
             }
 
@@ -79,21 +80,24 @@ class SpawnEvent(private val config: Configuration) {
 
         if (!condition()) return false
 
-        val isEnabled = config.getBoolean("$category.enabled", true)
-        if (!isEnabled) return false
-
         val langKey = if (isSnack) "$category.SpawnMessage-Snack"
         else "$category.SpawnMessage"
 
+        // Get world and biome information
+        val world = pokemonEntity.world as ServerWorld
+        val biome = world.getBiome(spawnPos).value()
+        val biomeRegistry = world.registryManager.get(RegistryKeys.BIOME)
+        val biomeId = biomeRegistry.getId(biome) ?: Identifier("minecraft", "plains")
+
         val replacements = mapOf(
             "pokemon" to pokemonEntity.pokemon.species.name,
-            "gender" to genderReplacements(pokemonEntity),
+            "gender" to PlaceholderUtils.getGenderReplacements(pokemonEntity),
             "player" to spawnerName,
             "x" to spawnPos.x.toString(),
             "y" to spawnPos.y.toString(),
             "z" to spawnPos.z.toString(),
-            "dimension" to pokemonEntity.world.registryKey.value.asString(),
-            "biome" to pokemonEntity.world.getBiome(spawnPos).idAsString
+            "dimension" to PlaceholderUtils.getWorldName(pokemonEntity.world as ServerWorld),
+            "biome" to PlaceholderUtils.getBiomeTranslatable(biomeId)
         )
 
         // Send the message to all players
@@ -102,14 +106,5 @@ class SpawnEvent(private val config: Configuration) {
         }
 
         return true
-    }
-
-    private fun genderReplacements(pokemonEntity: PokemonEntity): String {
-        return when (pokemonEntity.pokemon.gender) {
-            Gender.MALE -> "♂"
-            Gender.FEMALE -> "♀"
-            Gender.GENDERLESS -> "⚲"
-            else -> "⚲"
-        }
     }
 }

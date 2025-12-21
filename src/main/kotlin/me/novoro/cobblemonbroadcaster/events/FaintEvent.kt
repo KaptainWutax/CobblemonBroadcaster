@@ -4,12 +4,15 @@ import me.novoro.cobblemonbroadcaster.config.Configuration
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import me.novoro.cobblemonbroadcaster.util.LangManager
+import me.novoro.cobblemonbroadcaster.util.PlaceholderUtils
 import net.minecraft.server.MinecraftServer
 
 class FaintEvent(private val config: Configuration, private val server: MinecraftServer) {
 
-    private val faintedPokemonCache = mutableSetOf<String>() // Cache to avoid duplicate announcements
+    // Cache to avoid duplicate announcements
+    private val faintedPokemonCache = mutableSetOf<String>()
 
     init {
         CobblemonEvents.BATTLE_FAINTED.subscribe(priority = Priority.LOWEST) { event ->
@@ -57,9 +60,6 @@ class FaintEvent(private val config: Configuration, private val server: Minecraf
         if (!condition()) {
             return false
         }
-
-        val isEnabled = config.getBoolean("$category.enabled", true)
-        if (!isEnabled) return false
 
         val langKey = "$category.FaintMessage"
         val replacements = mapOf(

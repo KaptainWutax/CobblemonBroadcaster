@@ -19,10 +19,9 @@ object BroadcastCommands {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource?>) {
         dispatcher.register(
             CommandManager.literal("cobblemonbroadcaster")
-                .then(
-                    CommandManager.literal("reload")
-                        .requires(Permissions.require(RELOAD_PERMISSION_NODE, 2))
-                        .executes { ctx -> reloadConfigs(ctx) }
+                .then(CommandManager.literal("reload")
+                    .requires(Permissions.require(RELOAD_PERMISSION_NODE, 2))
+                    .executes { ctx -> reloadConfigs(ctx) }
                 )
         )
     }
@@ -35,7 +34,7 @@ object BroadcastCommands {
      */
     private fun reloadConfigs(ctx: CommandContext<ServerCommandSource>): Int {
         try {
-            CobblemonBroadcaster.reloadConfigurations() // Reload configurations
+            CobblemonBroadcaster.reloadConfigurations()
             ctx.source.sendFeedback(
                 { net.minecraft.text.Text.literal("Cobblemon Broadcaster configuration reloaded successfully.") },
                 false

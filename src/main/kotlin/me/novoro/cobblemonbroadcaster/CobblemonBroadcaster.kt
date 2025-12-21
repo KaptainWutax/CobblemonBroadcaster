@@ -62,7 +62,7 @@ class CobblemonBroadcaster : ModInitializer {
 		}
 
 		// Listener for Player Joins (Relevant for FaintEvent)
-		ServerPlayConnectionEvents.JOIN.register { handler: ServerPlayNetworkHandler, sender, server ->
+		ServerPlayConnectionEvents.JOIN.register { handler: ServerPlayNetworkHandler, _, _ ->
 			val player = handler.player
 			playerLoginTimes[player.uuid] = System.currentTimeMillis()
 		}
@@ -84,18 +84,14 @@ class CobblemonBroadcaster : ModInitializer {
 
 	fun configManager() {
 		mainConfig = getConfig("config.yml")
-		if (mainConfig == null) {
-			LOGGER.error("Failed to load main configuration. Default values will be used.")
-		} else {
-			LOGGER.info("Configuration loaded successfully.")
-		}
+		if (mainConfig == null) LOGGER.error("Failed to load main configuration. Default values will be used.")
+		else LOGGER.info("Configuration loaded successfully.")
 
 		val blacklistConfig = getConfig("world-blacklist.yml")
-		if (blacklistConfig == null) {
-			LOGGER.error("Failed to load world-blacklist.yml!")
-		} else {
+		if (blacklistConfig == null) LOGGER.error("Failed to load world-blacklist.yml!")
+		else {
 			me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.load(blacklistConfig)
-			LOGGER.info("Blacklisted worlds loaded: {}", me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.getblacklistedWorlds)
+			LOGGER.info("Blacklisted worlds loaded: {}", me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.getBlacklistedWorlds)
 		}
 	}
 
@@ -158,6 +154,7 @@ class CobblemonBroadcaster : ModInitializer {
 		// For each player's UUID, store the last time they joined (in ms).
 		val playerLoginTimes = mutableMapOf<UUID, Long>()
 		private var mainConfig: Configuration? = null
+		private var serverInstance: MinecraftServer? = null
 
 		fun getMainConfig(): Configuration? {
 			return mainConfig
@@ -180,12 +177,9 @@ class CobblemonBroadcaster : ModInitializer {
 				)
 				LangManager.loadConfig(mainConfig)
 				LOGGER.info("Cobblemon Broadcaster configuration reloaded successfully.")
-
-				val worldBlacklistConfig = YamlConfiguration.loadConfiguration(
-					CobblemonBroadcaster().getOrCreateConfigurationFile("world-blacklist.yml")
-				)
+				val worldBlacklistConfig = YamlConfiguration.loadConfiguration(CobblemonBroadcaster().getOrCreateConfigurationFile("world-blacklist.yml"))
 				me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.load(worldBlacklistConfig)
-				LOGGER.info("Blacklisted worlds reloaded: {}", me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.getblacklistedWorlds)
+				LOGGER.info("Blacklisted worlds reloaded: {}", me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.getBlacklistedWorlds)
 
 			} catch (e: Exception) {
 				LOGGER.error("Failed to reload configuration: ${e.message}", e)
@@ -193,5 +187,4 @@ class CobblemonBroadcaster : ModInitializer {
 			}
 		}
 	}
-
 }

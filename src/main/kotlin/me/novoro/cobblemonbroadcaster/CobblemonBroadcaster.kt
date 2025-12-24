@@ -7,12 +7,12 @@ import me.novoro.cobblemonbroadcaster.events.CaptureEvent
 import me.novoro.cobblemonbroadcaster.events.FaintEvent
 import me.novoro.cobblemonbroadcaster.events.SpawnEvent
 import me.novoro.cobblemonbroadcaster.util.LangManager
+import me.novoro.cobblemonbroadcaster.util.LuckPerms
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.luckperms.api.LuckPermsProvider
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayNetworkHandler
 import org.slf4j.Logger
@@ -63,12 +63,10 @@ class CobblemonBroadcaster : ModInitializer {
 	 * This method ensures the permissions system is active and running.
 	 */
 	private fun setupPermissions() {
-		try {
-			LuckPermsProvider.get()
-			// Attempt to get an instance of LuckPermsProvider, signaling that permissions have been set up.
-			LOGGER.info("Permissions system initialized!")
-		} catch (e: Exception) {
-			LOGGER.error("Failed to initialize permissions system!", e)
+		if (FabricLoader.getInstance().isModLoaded("LuckPerms")) {
+			LuckPerms
+		} else {
+			LOGGER.info("Using Fabric-Permissions API")
 		}
 	}
 

@@ -20,16 +20,15 @@
 			}
 		]
 	},
-	"mixins": [
-		"cobblemonbroadcaster.mixins.json"
-	],
 	"depends": {
 		"java": ">=21",
 		"minecraft": ">=1.21.0",
 		"fabric-api": "*",
 		"fabricloader": ">=0.17.2",
-		"luckperms": "*",
 		"fabric-language-kotlin": "*",
 		"cobblemon": ">=1.7.0"
+	},
+	"recommends": {
+		"luckperms": "*"
 	}
 }

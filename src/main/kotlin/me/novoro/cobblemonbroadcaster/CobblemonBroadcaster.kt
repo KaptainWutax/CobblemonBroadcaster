@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.luckperms.api.LuckPermsProvider
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayNetworkHandler
 import org.slf4j.Logger
@@ -45,7 +44,6 @@ class CobblemonBroadcaster : ModInitializer {
 		// Capture server instance and register events
 		ServerLifecycleEvents.SERVER_STARTED.register { minecraftServer ->
 			serverInstance = minecraftServer
-			setupPermissions()
 
 			// Register events that require the server instance
 			registerEventListeners()
@@ -55,20 +53,6 @@ class CobblemonBroadcaster : ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register { handler: ServerPlayNetworkHandler, _, _ ->
 			val player = handler.player
 			playerLoginTimes[player.uuid] = System.currentTimeMillis()
-		}
-	}
-
-	/**
-	 * Initialize and setup permissions using the LuckPerms API.
-	 * This method ensures the permissions system is active and running.
-	 */
-	private fun setupPermissions() {
-		try {
-			LuckPermsProvider.get()
-			// Attempt to get an instance of LuckPermsProvider, signaling that permissions have been set up.
-			LOGGER.info("Permissions system initialized!")
-		} catch (e: Exception) {
-			LOGGER.error("Failed to initialize permissions system!", e)
 		}
 	}
 

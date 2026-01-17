@@ -12,7 +12,6 @@ object PlaceholderUtils {
         return when (pokemonEntity.pokemon.gender) {
             Gender.MALE -> "♂"
             Gender.FEMALE -> "♀"
-            Gender.GENDERLESS -> "⚲"
             else -> "⚲"
         }
     }

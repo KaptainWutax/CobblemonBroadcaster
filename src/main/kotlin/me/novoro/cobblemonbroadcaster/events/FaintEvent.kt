@@ -6,8 +6,12 @@ import com.cobblemon.mod.common.api.events.battles.BattleFaintedEvent
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription
 import me.novoro.cobblemonbroadcaster.config.Configuration
+import me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds
+import me.novoro.cobblemonbroadcaster.util.LabelHelper
 import me.novoro.cobblemonbroadcaster.util.LangManager
+import me.novoro.cobblemonbroadcaster.util.SimpleLogger
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.world.ServerWorld
 
 class FaintEvent(private val config: Configuration, private val server: MinecraftServer) {
 
@@ -25,6 +29,14 @@ class FaintEvent(private val config: Configuration, private val server: Minecraf
             val pokemon = event.killed.effectedPokemon
             val player = event.killed.actor.getName()
 
+            // Blacklist Stuff
+            // How tf do I get the world from a pokemon battle properly, a killed entity may not always exist
+            val world = server.playerManager.getPlayer(player.string)?.world as? ServerWorld
+            val worldName = world?.registryKey?.value.toString()
+            if (BlacklistedWorlds.isBlacklisted(worldName)) {
+                return@subscribe
+            }
+
             // Ensure the Pokémon is wild and not already processed
             // why tf does isNPCOwned() get ignored if not accompanied with !isWild()!!!
             if (pokemon.isPlayerOwned() || pokemon.isNPCOwned() || !pokemon.isWild()) return@subscribe
@@ -36,12 +48,17 @@ class FaintEvent(private val config: Configuration, private val server: Minecraf
             if (isBoss) return@subscribe
 
             val aspects = AspectProvider.providers.flatMap { it.provide(pokemon) }
-            //SimpleLogger.debug("Pokemon ${pokemon.species.name} has aspects: $aspects")
+            val labels = LabelHelper.filterValidLabels(pokemon.species.labels.map { it })
+            val allIdentifiers = mutableSetOf<String>()
+            allIdentifiers.addAll(aspects)
+            allIdentifiers.addAll(labels)
+
+            SimpleLogger.debug("Pokemon ${pokemon.species.name} killed by ${player.string} has aspects: $aspects, labels: $labels")
 
             // Dynamically check user-defined aspects first
             config.keys.forEach { customCategory ->
                 if (customCategory !in setOf("shiny", "legendary", "mythical", "ultrabeast")) {
-                    if (customCategory in aspects) {
+                    if (customCategory in allIdentifiers) {
                         if (handlePokemonCategory(pokemon, player.toString(),customCategory) { true }) return@subscribe
                     }
                 }

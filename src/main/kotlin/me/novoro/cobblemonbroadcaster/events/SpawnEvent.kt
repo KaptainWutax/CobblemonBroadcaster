@@ -36,7 +36,9 @@ class SpawnEvent(private val config: Configuration) {
     init {
         spawnEvent = CobblemonEvents.POKEMON_ENTITY_SPAWN.subscribe(priority = Priority.LOWEST) { event ->
             // Ignore PokéSnacks - They don't have any aspects influenced by the snack in this event
-            if (event.spawnablePosition.spawner.name.startsWith("poke_snack")) return@subscribe
+            // Also ignore cancelled events - The Pokémon didn't fully spawn
+            if (event.spawnablePosition.spawner.name.startsWith("poke_snack")
+                || event.isCanceled) return@subscribe
 
             handleSpawn(event.entity, event.spawnablePosition)
         }

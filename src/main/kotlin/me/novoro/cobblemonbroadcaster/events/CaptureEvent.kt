@@ -7,7 +7,10 @@ import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent
 import com.cobblemon.mod.common.api.pokemon.aspect.AspectProvider
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription
 import com.cobblemon.mod.common.pokemon.Pokemon
+import me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds
+import me.novoro.cobblemonbroadcaster.util.LabelHelper
 import me.novoro.cobblemonbroadcaster.util.LangManager
+import me.novoro.cobblemonbroadcaster.util.SimpleLogger
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 
@@ -28,20 +31,21 @@ class CaptureEvent(private val config: Configuration) {
             // Blacklist Stuff
             val world = event.player.world as? ServerWorld
             val worldName = world?.registryKey?.value.toString()
-            if (me.novoro.cobblemonbroadcaster.util.BlacklistedWorlds.isBlacklisted(worldName)) {
-                return@subscribe
-            }
+            if (BlacklistedWorlds.isBlacklisted(worldName)) return@subscribe
+
+            val aspects = AspectProvider.providers.flatMap { it.provide(pokemon) }
+            val labels = LabelHelper.filterValidLabels(pokemon.species.labels.map { it })
+            val allIdentifiers = mutableSetOf<String>()
+            allIdentifiers.addAll(aspects)
+            allIdentifiers.addAll(labels)
 
             // Debugging: Log all aspects of the Pokémon
-            //SimpleLogger.debug("Pokemon ${pokemon.species.name} has aspects: $aspects")
-            val aspectsAndLabels = mutableSetOf<String>()
-            aspectsAndLabels.addAll(AspectProvider.providers.flatMap {it.provide(pokemon)})
-            aspectsAndLabels.addAll(pokemon.species.labels)
+            SimpleLogger.debug("Pokemon ${pokemon.species.name} caught by ${player.name.string} has aspects: $aspects, labels: $labels")
 
             // Dynamically check user-defined aspects first
             config.keys.forEach { customCategory ->
                 if (customCategory !in setOf("shiny", "legendary", "mythical", "ultrabeast")) {
-                    if (customCategory in aspectsAndLabels) {
+                    if (customCategory in allIdentifiers) {
                         if (handleCategory(pokemon, player, customCategory) { true }) return@subscribe
                     }
                 }

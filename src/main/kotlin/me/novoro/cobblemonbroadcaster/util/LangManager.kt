@@ -27,10 +27,10 @@ object LangManager {
                     when (value) {
                         is String -> {
                             lang[fullKey] = value
-                            //SimpleLogger.debug("Loaded lang key: $fullKey -> $value")
+                            SimpleLogger.debug("Loaded lang key: $fullKey -> $value")
                         }
                         else -> {
-                            //SimpleLogger.warn("Skipping non-string key: $fullKey (type: ${value?.javaClass?.simpleName})")
+                            SimpleLogger.debug("Skipping non-string key: $fullKey (type: ${value?.javaClass?.simpleName})")
                         }
                     }
                 }

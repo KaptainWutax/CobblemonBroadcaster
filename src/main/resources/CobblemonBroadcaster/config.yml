@@ -12,6 +12,7 @@ shiny:
   FaintMessage: "<red>A shiny <dark_red>{pokemon}<red> has fainted."
   # Message that gets sent to all players when the Pokemon with the spec is captured.
   CaptureMessage: "<yellow>A shiny <gold>{pokemon} <yellow>has been captured by <gold>{player}!"
+  # Message that gets sent to all players when the Pokemon with the spec is revived from a fossil.
   ReviveMessage: "<yellow>A shiny <gold>{pokemon} <yellow>has been revived by <gold>{player}!"
 legendary:
   Global-Alert: true
